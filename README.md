@@ -1,10 +1,10 @@
 # DrawSpace CMP
 
-A Kotlin Multiplatform project for drawing on Android, Web, and Desktop.
+A Kotlin Multiplatform project for drawing on Mobile, Web, and Desktop.
 
 ## Platform Demos
 
-### Android
+### Mobile (Android and IOS)
 ![Mobile Demo](images/android_demo.png)
 
 ### Web
