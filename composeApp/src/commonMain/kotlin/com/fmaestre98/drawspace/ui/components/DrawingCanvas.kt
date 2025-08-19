@@ -71,7 +71,7 @@ fun DrawingCanvas(
 private fun DrawScope.drawPath(
     path: List<Offset>,
     color: Color,
-    thickness: Float = 17f
+    thickness: Float = 12f
 ) {
     if (path.size == 1) {
         drawCircle(

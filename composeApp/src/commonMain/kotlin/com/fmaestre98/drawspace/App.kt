@@ -1,17 +1,17 @@
 package com.fmaestre98.drawspace
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -24,18 +24,19 @@ import com.fmaestre98.drawspace.ui.state.DrawingAction
 import com.fmaestre98.drawspace.ui.state.allColors
 import com.fmaestre98.drawspace.ui.theme.DrawSpaceAppTheme
 import com.fmaestre98.drawspace.ui.viewmodel.DrawingViewModel
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import drawspace.composeapp.generated.resources.Res
-import drawspace.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 @Preview
 fun App(viewModel: DrawingViewModel = viewModel { DrawingViewModel() }) {
-    DrawSpaceAppTheme {
+    val theme = isSystemInDarkTheme()
+    var isDarkTheme by remember { mutableStateOf(theme) }
+
+    DrawSpaceAppTheme(darkTheme = isDarkTheme) {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             val state by viewModel.state.collectAsStateWithLifecycle()
+            var isControlsVisible by remember { mutableStateOf(true) }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -50,6 +51,12 @@ fun App(viewModel: DrawingViewModel = viewModel { DrawingViewModel() }) {
                         .fillMaxWidth()
                         .weight(1f)
                 )
+                IconButton(onClick = { isControlsVisible = !isControlsVisible }) {
+                    Icon(
+                        imageVector = if (isControlsVisible) Icons.Default.ArrowDropDown else Icons.Default.ArrowDropUp,
+                        contentDescription = "Toggle Controls"
+                    )
+                }
                 CanvasControls(
                     selectedColor = state.selectedColor,
                     colors = allColors,
@@ -58,7 +65,13 @@ fun App(viewModel: DrawingViewModel = viewModel { DrawingViewModel() }) {
                     },
                     onClearCanvas = {
                         viewModel.onAction(DrawingAction.OnClearCanvasClick)
-                    }
+                    },
+                    onShareCanvas = {
+                        // Implement sharing logic here
+                    },
+                    onToggleTheme = { isDarkTheme = !isDarkTheme }, // Add this
+                    isDarkTheme = isDarkTheme, // Add this
+                    isVisible = isControlsVisible
                 )
             }
         }
