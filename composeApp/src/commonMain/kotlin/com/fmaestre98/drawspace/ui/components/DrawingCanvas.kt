@@ -1,12 +1,10 @@
 package com.fmaestre98.drawspace.ui.components
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -16,8 +14,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.util.fastForEach
-import com.fmaestre98.drawspace.ui.state.DrawingAction
-import com.fmaestre98.drawspace.ui.state.PathData
+import com.fmaestre98.drawspace.state.DrawingAction
+import com.fmaestre98.drawspace.state.PathData
 import kotlin.math.abs
 
 @Composable

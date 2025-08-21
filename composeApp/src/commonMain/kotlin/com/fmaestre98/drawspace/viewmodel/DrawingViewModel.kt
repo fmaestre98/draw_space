@@ -1,19 +1,24 @@
-package com.fmaestre98.drawspace.ui.viewmodel
+package com.fmaestre98.drawspace.viewmodel
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.fmaestre98.drawspace.ui.state.DrawingAction
-import com.fmaestre98.drawspace.ui.state.DrawingState
-import com.fmaestre98.drawspace.ui.state.PathData
+import com.fmaestre98.drawspace.state.DrawingAction
+import com.fmaestre98.drawspace.state.DrawingState
+import com.fmaestre98.drawspace.state.PathData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import androidx.compose.ui.graphics.Canvas
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 
 class DrawingViewModel(
 ) : ViewModel() {
@@ -28,6 +33,7 @@ class DrawingViewModel(
             DrawingAction.OnPathEnd -> onPathEnd()
             is DrawingAction.OnSelectColor -> onSelectColor(action.color)
             is DrawingAction.OnTap -> onTap(action.offset)
+            is DrawingAction.OnShareCanvas -> shareCanvas(action.onShare)
         }
     }
 
@@ -82,5 +88,33 @@ class DrawingViewModel(
             path = listOf(offset)
         )
         _state.update { it.copy(paths = it.paths + pointPath) }
+    }
+
+
+    fun shareCanvas(onShare: ((ImageBitmap) -> Unit)) {
+        val state = _state.value
+        val bitmap = ImageBitmap(1080, 1920) // Adjust size as needed
+        val canvas = Canvas(bitmap)
+
+        // Draw all paths onto the bitmap
+        state.paths.fastForEach { pathData ->
+            val paint = Paint()
+            paint.color = pathData.color
+            paint.strokeWidth = 12f
+            paint.strokeJoin = StrokeJoin.Round
+            paint.strokeCap = StrokeCap.Round
+            canvas.drawPath(
+                path = Path().apply {
+                    pathData.path.forEachIndexed { index, offset ->
+                        if (index == 0) moveTo(offset.x, offset.y)
+                        else lineTo(offset.x, offset.y)
+                    }
+                },
+                paint
+            )
+        }
+
+        // Pass the bitmap to the share callback
+        onShare(bitmap)
     }
 }

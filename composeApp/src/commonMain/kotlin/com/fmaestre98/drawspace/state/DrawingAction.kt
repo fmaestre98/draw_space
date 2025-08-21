@@ -1,4 +1,4 @@
-package com.fmaestre98.drawspace.ui.state
+package com.fmaestre98.drawspace.state
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -11,4 +11,6 @@ sealed interface DrawingAction {
     data class OnSelectColor(val color: Color) : DrawingAction
     data object OnClearCanvasClick : DrawingAction
     data class OnTap(val offset: Offset) : DrawingAction
+
+    data class OnShareCanvas(val onShare: (ImageBitmap) -> Unit) : DrawingAction
 }

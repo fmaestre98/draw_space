@@ -20,10 +20,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fmaestre98.drawspace.ui.components.CanvasControls
 import com.fmaestre98.drawspace.ui.components.DrawingCanvas
-import com.fmaestre98.drawspace.ui.state.DrawingAction
-import com.fmaestre98.drawspace.ui.state.allColors
+import com.fmaestre98.drawspace.state.DrawingAction
+import com.fmaestre98.drawspace.state.allColors
 import com.fmaestre98.drawspace.ui.theme.DrawSpaceAppTheme
-import com.fmaestre98.drawspace.ui.viewmodel.DrawingViewModel
+import com.fmaestre98.drawspace.viewmodel.DrawingViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -67,7 +67,9 @@ fun App(viewModel: DrawingViewModel = viewModel { DrawingViewModel() }) {
                         viewModel.onAction(DrawingAction.OnClearCanvasClick)
                     },
                     onShareCanvas = {
-                        // Implement sharing logic here
+                        viewModel.onAction(DrawingAction.OnShareCanvas { imageBitmap ->
+                            shareImage(imageBitmap)
+                        })
                     },
                     onToggleTheme = { isDarkTheme = !isDarkTheme }, // Add this
                     isDarkTheme = isDarkTheme, // Add this

@@ -26,4 +26,11 @@ This project is inspired by one tutorial from [Philipp Lackner's YouTube channel
 
 Clone the repository and follow platform-specific instructions in the documentation.
 
+
+## TODO:
+
+- fix share image option
+- add persistence layer
+- add text to image AI feature
+
 ...

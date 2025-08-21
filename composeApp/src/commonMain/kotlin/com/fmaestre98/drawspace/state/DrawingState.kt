@@ -1,4 +1,4 @@
-package com.fmaestre98.drawspace.ui.state
+package com.fmaestre98.drawspace.state
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
