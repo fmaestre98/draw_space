@@ -29,7 +29,7 @@ Clone the repository and follow platform-specific instructions in the documentat
 
 ## TODO:
 
-- fix share image option
+- fix share image option for web
 - add persistence layer
 - add text to image AI feature
 
