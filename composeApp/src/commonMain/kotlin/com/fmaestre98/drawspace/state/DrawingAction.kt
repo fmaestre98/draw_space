@@ -12,5 +12,10 @@ sealed interface DrawingAction {
     data object OnClearCanvasClick : DrawingAction
     data class OnTap(val offset: Offset) : DrawingAction
 
-    data class OnShareCanvas(val onShare: (ImageBitmap) -> Unit) : DrawingAction
+    data class OnShareCanvas(
+        val width: Int,
+        val height: Int,
+        val backgroundColor: Color,
+        val onShare: (ImageBitmap) -> Unit
+    ) : DrawingAction
 }

@@ -11,11 +11,14 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fmaestre98.drawspace.ui.components.CanvasControls
@@ -36,6 +39,8 @@ fun App(viewModel: DrawingViewModel = viewModel { DrawingViewModel() }) {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             val state by viewModel.state.collectAsStateWithLifecycle()
             var isControlsVisible by remember { mutableStateOf(true) }
+            var canvasSize by remember { mutableStateOf(IntSize.Zero) }
+            val backgroundColor = MaterialTheme.colorScheme.background
 
             Column(
                 modifier = Modifier
@@ -50,6 +55,7 @@ fun App(viewModel: DrawingViewModel = viewModel { DrawingViewModel() }) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
+                        .onSizeChanged { canvasSize = it }
                 )
                 IconButton(onClick = { isControlsVisible = !isControlsVisible }) {
                     Icon(
@@ -67,12 +73,21 @@ fun App(viewModel: DrawingViewModel = viewModel { DrawingViewModel() }) {
                         viewModel.onAction(DrawingAction.OnClearCanvasClick)
                     },
                     onShareCanvas = {
-                        viewModel.onAction(DrawingAction.OnShareCanvas { imageBitmap ->
-                            shareImage(imageBitmap)
-                        })
+                        if (canvasSize != IntSize.Zero) {
+                            viewModel.onAction(
+                                DrawingAction.OnShareCanvas(
+                                    width = canvasSize.width,
+                                    height = canvasSize.height,
+                                    backgroundColor = backgroundColor,
+                                    onShare = { imageBitmap ->
+                                        shareImage(imageBitmap)
+                                    }
+                                )
+                            )
+                        }
                     },
-                    onToggleTheme = { isDarkTheme = !isDarkTheme }, // Add this
-                    isDarkTheme = isDarkTheme, // Add this
+                    onToggleTheme = { isDarkTheme = !isDarkTheme },
+                    isDarkTheme = isDarkTheme,
                     isVisible = isControlsVisible
                 )
             }
